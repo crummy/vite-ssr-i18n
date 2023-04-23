@@ -1,3 +1,5 @@
+import {I18nextProvider} from "react-i18next";
+
 export { render }
 // See https://vite-plugin-ssr.com/data-fetching
 export const passToClient = ['pageProps', 'urlPathname']
@@ -8,6 +10,7 @@ import { PageShell } from './PageShell'
 import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr/server'
 import logoUrl from './logo.svg'
 import type { PageContextServer } from './types'
+import i18n from "./i18n";
 
 async function render(pageContext: PageContextServer) {
   const { Page, pageProps } = pageContext
@@ -15,7 +18,9 @@ async function render(pageContext: PageContextServer) {
   if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined')
   const pageHtml = ReactDOMServer.renderToString(
     <PageShell pageContext={pageContext}>
-      <Page {...pageProps} />
+      <I18nextProvider i18n={i18n}>
+        <Page {...pageProps} />
+      </I18nextProvider>
     </PageShell>
   )
 
