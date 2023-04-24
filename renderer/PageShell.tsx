@@ -4,10 +4,11 @@ import {PageContextProvider} from './usePageContext'
 import type {PageContext} from './types'
 import './PageShell.css'
 import {ChangeLanguageLink, Link} from './Link'
+import {Locale} from "./i18n";
 
 export {PageShell}
 
-function PageShell({children, pageContext}: { children: React.ReactNode; pageContext: PageContext }) {
+function PageShell({children, pageContext}: { children: React.ReactNode; pageContext: PageContext & Locale }) {
     return (
         <React.StrictMode>
             <PageContextProvider pageContext={pageContext}>
