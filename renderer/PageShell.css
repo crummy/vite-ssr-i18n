@@ -17,3 +17,6 @@ a {
 .navitem.is-active {
   background-color: #eee;
 }
+.navitem.is-inactive {
+  color: #aaa;
+}

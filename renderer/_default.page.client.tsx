@@ -1,27 +1,22 @@
-import i18n from "./i18n";
+import {i18n, initLocale} from "./i18n";
 
-export { render }
-
-import React from 'react'
-import { hydrateRoot } from 'react-dom/client'
-import { PageShell } from './PageShell'
-import type { PageContextClient } from './types'
+import * as React from 'react'
+import {hydrateRoot} from 'react-dom/client'
+import {PageShell} from './PageShell'
 import {I18nextProvider} from "react-i18next";
+import {Suspense} from "react";
 
-// This render() hook only supports SSR, see https://vite-plugin-ssr.com/render-modes for how to modify render() to support SPA
-async function render(pageContext: PageContextClient) {
-  const { Page, pageProps } = pageContext
-  if (!Page) throw new Error('Client-side render() hook expects pageContext.Page to be defined')
-  hydrateRoot(
-    document.getElementById('page-view')!,
-    <PageShell pageContext={pageContext}>
-      <I18nextProvider i18n={i18n}>
-        <Page {...pageProps} />
-      </I18nextProvider>
-    </PageShell>
-  )
+export async function render(pageContext: any) {
+    const {Page, pageProps, locale} = pageContext
+    await initLocale(locale)
+    hydrateRoot(
+        document.getElementById('page-view')!,
+        <PageShell pageContext={pageContext}>
+            <Suspense fallback={<div>Loading...</div>}>
+                <I18nextProvider i18n={i18n}>
+                    <Page {...pageProps} />
+                </I18nextProvider>
+            </Suspense>
+        </PageShell>
+    )
 }
-
-/* To enable Client-side Routing:
-export const clientRouting = true
-// !! WARNING !! Before doing so, read https://vite-plugin-ssr.com/clientRouting */
